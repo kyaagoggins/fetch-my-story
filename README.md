@@ -1,8 +1,12 @@
-# React + Vite
+# Pet Description Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Here are resources that I have used when coding.
 
-Currently, two official plugins are available:
+React is the base framework that we are using.
+React Docs: https://react.dev/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Material UI is the UI library that we are using for containers and components. 
+Material UI Docs: https://mui.com/material-ui/
+
+React Router allows for page routing with react.
+React Router: https://reactrouter.com/home
