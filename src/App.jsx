@@ -5,6 +5,7 @@ import { Button, Grid2 } from '@mui/material'
 import FosterSMS from './FosterSMS';
 import Home from './Home';
 import Navbar from './components/Navbar/Navbar';
+import AdminHome from './admin/AdminHome';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Routes>
             <Route path='/' element={<Home />}/>
             <Route path='/foster-sms' element={<FosterSMS />}/>
+            <Route path='/admin' element={<AdminHome />}/>
           </Routes>
       </Router>
     </>

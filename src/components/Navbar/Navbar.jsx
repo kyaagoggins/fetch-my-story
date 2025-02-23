@@ -7,6 +7,7 @@ export default function Navbar() {
       <ul>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/foster-sms">Foster SMS</Link></li>
+        <li><Link to="/admin">Admin</Link></li>
       </ul>
     </nav>
   );
