@@ -1,13 +1,15 @@
+@import "./vars.css";
+
 body {
     /*text-align: center;*/
     font-family: "Arial";
 }
-.phone-border {
+.phoneBorder {
     border: 1px solid black;
     border-radius: 5px;
     padding: 20px;
 }
-.text-gen-box {
+.descTextGen {
     border: 1px solid black;
     border-radius: 5px;
     padding: 5px;
@@ -19,10 +21,19 @@ body {
     color: #2b2d32;
 }
 .questionaire {
-    height: 190px;
+    height: 100%;
     overflow-x: hidden;
     text-align: left;
     background-color: #efefef;
     border-radius: 5px;
     padding: 10px;
+}
+
+.else {
+    height: 100%;
+    width: 100%;
+}
+
+.submit {
+    margin-top: 30px !important;
 }

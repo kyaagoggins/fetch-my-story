@@ -4,20 +4,14 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { Button, Grid2 } from '@mui/material'
 import FosterSMS from './FosterSMS';
 import Home from './Home';
+import Navbar from './components/Navbar/Navbar';
 
 function App() {
 
   return (
     <>
       <Router>
-        <Grid2 container>
-          <nav>
-            <ul>
-              <li><Link to='/'>Home</Link></li>
-              <li><Link to='/foster-sms'>Foster SMS</Link></li>
-            </ul>
-          </nav>
-        </Grid2>
+        <Navbar />
 
         <Routes>
             <Route path='/' element={<Home />}/>
