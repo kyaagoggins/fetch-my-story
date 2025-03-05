@@ -1,8 +1,17 @@
 import React from "react";
+import AAUFullLogo from "../src/assets/AAU/AAUFullLogo.png.png";
 
 function Home () {
     return (
-        <h1>This is Home</h1>
+        <div>
+             <img
+                src={AAUFullLogo}
+                alt="Image"
+                //className={styles}
+            />
+           <h1></h1> 
+        </div>
+        
     )
 }
 

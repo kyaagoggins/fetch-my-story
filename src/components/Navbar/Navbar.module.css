@@ -1,1 +1,12 @@
 /* navbar needs styling applied to fix how it looks */
+.linksContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navBar {
+    width: 100%;
+    /* /background-color:aqua */
+}
+
