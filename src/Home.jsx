@@ -3,7 +3,7 @@ import AAUFullLogo from "../src/assets/AAU/AAUFullLogo.png.png";
 
 function Home () {
     return (
-        <div>
+        <div> 
              <img
                 src={AAUFullLogo}
                 alt="Image"
