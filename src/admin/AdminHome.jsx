@@ -1,7 +1,13 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
-export default function AdminHome () {
+function AdminHome () {
     return (
-        <h2>Admin Home</h2>
+        <>
+            <h1>Admin Home</h1>
+            <br></br>
+            <Link to="/admin/settings">Settings</Link>
+        </>
     )
 };
+export default AdminHome
