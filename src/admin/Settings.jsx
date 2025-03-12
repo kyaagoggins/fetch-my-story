@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; //state allows changes
-import './Settings.css';
+import './Settings.module.css';
 
 function Settings() {
   const [display, changeDisplay] = useState('petQuestions');
