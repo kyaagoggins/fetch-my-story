@@ -123,8 +123,4 @@ return (
 
 }
 
-<<<<<<< HEAD
 export default Settings;
-=======
-export default Settings;
->>>>>>> 80d66f1db55ca8f726c21baf09a9fb53b606f10f
