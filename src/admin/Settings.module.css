@@ -1,23 +1,3 @@
-/*updated 3/12--susan Settings.css*/
-
-@font-face {
-    font-family: 'robotoregular';
-    src: url('Roboto-Regular-webfont.eot');
-    src: url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('Roboto-Regular-webfont.woff2') format('woff2'),
-         url('Roboto-Regular-webfont.woff') format('woff'),
-         url('Roboto-Regular-webfont.ttf') format('truetype'),
-         url('Roboto-Regular-webfont.svg#robotoregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-body{
-    font-family:'Roboto';
-}
-
-/* this is the top banner for changing the settings */
 button{
     margin-top: 5px;
     padding: 10px 20px;
@@ -27,116 +7,14 @@ button{
     cursor: pointer;
 }
 
-/* this was an old setting */
-/* btn{
+btn{
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #FFFFFF;
     color: black;
     cursor: pointer;
-} */
-
-/* on click, this setting makes the current page turn yellow */
-button.active {
-  background-color: #ffcc4c; 
-  color: black; 
 }
 
-/*  this was an old setting to make buttons turn yellow on mouse over */
-/* btn:hover{
+btn:hover{
     background-color: #ffcc4c;
-} */
-
-/* This is the button on the text message and AI screen */
-.submit-btn{
-    width: 150px;
-    padding: 10px 20px;
-    background-color: #2596be;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin: 25px auto;
 }
-
-/* This is the little trashcan icon */
-.delete-button{
-  background-color: #ffffff;
-  font-size: 16px;
-  margin-left: 10px;
-}
-
-/* This is the breadcrumbs header */
-.admin-header{
-  font-size: 32px;
-  margin-top: 150px;
-  margin-bottom: 20px;
-}
-
-/* This adjusts the space between the yellow/blue header and the gray box  */
-.adminSettings-banner{
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-/* This is a lovely gray box I found on Reddit. */
-.gray-box{
-  position: relative;
-  width: 450px;
-  margin: auto;
-  background-color: #fff;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  -moz-border-radius: 4px 4px 4px 4px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 4px 4px 4px 4px;
-  border-color: #E5E5E5 #DBDBDB #D2D2D2;
-  border-style: solid;
-  border-width: 1px;
-  height: 600px;
-  width: 450px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; 
-}
-
-/* This is the align for the edit buttons */
-.edit-button{
-  margin-top: auto;
-  margin-left: auto;
-}
-
-/* This makes the question list grow upward and scroll with the gray box  */
-.list{
-  list-style-type: none;
-  margin-bottom: 20px;
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-/* This is spacing for the pet questions */
-.list-margin{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom:25px;
-}
-
-/* This is the settings for the Adjust Questions input box */
-.question-input-box{
-  align-self: flex-start;
-  width:380px;
-}
-
-/* This is the settings for the Add Question button */
-.add-question {
-  right: 20px;
-  padding: 10px 20px;        
-  background-color: #2596be; 
-  color: white;              
-  border: none;             
-  cursor: pointer;          
-  width: auto;                
-  margin-top: 10px;           
-  align-self: flex-end;
-}
-
