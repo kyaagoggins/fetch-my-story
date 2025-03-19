@@ -36,7 +36,7 @@ const AdminHome = ({ }) => {
     }
 
     return (
-        <Grid2 container>
+        <Grid2 container spacing={2}>
             <h1>Admin Home</h1>
             <br></br>
             {pets.length === 0 ? (
