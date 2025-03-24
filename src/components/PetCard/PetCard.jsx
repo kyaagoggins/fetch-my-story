@@ -49,6 +49,8 @@ function PetCard ({ pet, needs }) {
             handleClose={handleCloseEdit}
             title={pet.name}
             pet={pet}
+            needDesc={needDescription}
+            needPhotos={false}
         />  
 
     </>

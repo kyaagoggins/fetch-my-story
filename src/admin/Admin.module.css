@@ -56,6 +56,39 @@
 .modalContent {
     display: flex;
     width: 400px;
+    flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+}
+
+.editButtonsDuo {
+    background-color: rgb(34, 170, 224) !important;
+    box-sizing: none;
+    margin: 0 0 0 10px !important;
+}
+
+.editButtonsSingle {
+    background-color: rgb(34, 170, 224) !important;
+    box-sizing: none;
+    margin-left: 110px !important;
+}
+
+.editText {
+    display: flex;
+    justify-content: center;
+}
+
+.editModalButtons {
+    display: flex;
+    justify-content: center !important;
+}
+
+.publishButton {
+    background-color: rgb(105, 219, 52) !important;
+    box-sizing: none;
+}
+
+.rejectButton {
+    background-color: rgb(228, 64, 58) !important;
+    box-sizing: none;
 }
