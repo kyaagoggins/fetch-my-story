@@ -1,6 +1,7 @@
 import React, { useState } from 'react'; 
-import { Menu } from 'primereact/menu';
-import { PrimeIcons } from 'primereact/api';
+import DeleteIcon from '@mui/icons-material/Delete';
+//import { Menu } from 'primereact/menu';
+//
 import './Settings.module.css';
 //import 'primeicons/primeicons.css';
 
@@ -94,7 +95,7 @@ function Settings() {
               const editedPetQuestion = prompt("Edit Question:", question);
                 if (editedPetQuestion) changePetQuestion(index, editedPetQuestion);
             }} class="edit-button">Edit</button>
-              <button onClick={() => deletePetQuestion(index)} class="delete-button"> <i className="pi pi-trash" style={{ fontSize: '1rem' }}></i> <span className="pi pi-trash"></span></button>
+              <button onClick={() => deletePetQuestion(index)} class="delete-button"> <DeleteIcon /></button>
           </li>
         )
         )}
