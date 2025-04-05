@@ -9,6 +9,7 @@
     max-width: 400px;
     align-items: center;
     position: relative;
+    cursor:pointer;
 }
 
 .imgContainer {

@@ -8,17 +8,22 @@ import EditModal from "../../admin/EditModal";
 
 function PetCard ({ pet, needs }) {
 
+    //state variables 
     const [needDescription, setNeedDescription] = useState(false);
+    const [needPhotos, setNeedPhotos] = useState(false);
     const [needApproval, setNeedApproval] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
 
+    //handle open/close modal 
     const handleOpenEdit = () => setOpenEdit(true);
     const handleCloseEdit = () => setOpenEdit(false);
 
+    //return different needs for icon display based on passed param
     useEffect(() => {
         switch(needs) {
-            case 'description': 
-                setNeedDescription(true);
+            case 'attention': 
+                if (pet.needsDesc) setNeedDescription(true);
+                if (pet.needsPhotos) setNeedPhotos(true);
             break;
             case 'approval': 
                 setNeedApproval(true);
@@ -32,27 +37,29 @@ function PetCard ({ pet, needs }) {
 
     return (
     <>
-        <Grid2 size={4} className={styles.petCard}>
-            { needDescription && (
-                <span id='badge' className={styles.badge} onClick={handleOpenEdit}><EditIcon /></span>
+        {/* pet card div - clickable to open the edit modal  */}
+        <Grid2 size={4} className={styles.petCard} id="petCard" role='button' onClick={handleOpenEdit}>
+            {/* show icons based on props being passed from the admin page  */}
+            { (needDescription || needPhotos) && (
+                <span id='badge' className={styles.badge}><EditIcon /></span>
             )}
             { needApproval && (
-                <span id='badge' className={styles.badge} onClick={handleOpenEdit}><DoneOutlineIcon /></span>
+                <span id='badge' className={styles.badge}><DoneOutlineIcon /></span>
             )}
             <Grid2 className={styles.imgContainer}>
                 <img src={pet.photos[0]?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
             </Grid2>
             <div><p>{pet.name}</p></div>
         </Grid2>
+        {/* edit modal parameters passed to open */}
         <EditModal 
             open={openEdit}
             handleClose={handleCloseEdit}
             title={pet.name}
             pet={pet}
             needDesc={needDescription}
-            needPhotos={false}
+            needPhotos={needPhotos}
         />  
-
     </>
     );
 }
