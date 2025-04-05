@@ -1,15 +1,21 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
-const CLIENT_ID = 'J06btbshqZYna6oXE2Kn8LbU8xPRemIZ4mSYCOThUuoT8tVq0Z';
-const CLIENT_SECRET = 'qyuM8A8wbCCR90igrH2UA2NH0fohnfAMh96IEg0g';
+
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
 
+//petfinder api server code 
+
+//get route for get pets 
 app.get('/api/pets', async (request, result) => {
     try {
         const urlPetId = request.query.id;
@@ -20,8 +26,8 @@ app.get('/api/pets', async (request, result) => {
         //get token 
         const tokenResponse = await axios.post('https://api.petfinder.com/v2/oauth2/token', {
             grant_type: 'client_credentials',
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET
         });
 
         const accessToken = tokenResponse.data.access_token;
@@ -44,3 +50,39 @@ app.get('/api/pets', async (request, result) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// code for chatgpt api
+
+app.post('/api/chat', async (req, res) => {
+    const { prompt } = req.body;
+  
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: prompt }],
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
+  
+      const message = response.data.choices[0].message.content;
+      res.json({ message });
+    } catch (error) {
+      console.error('Error from OpenAI:', error.response?.data || error.message);
+      res.status(500).json({ error: 'Failed to fetch from OpenAI' });
+    }
+  });
+  
+  app.get('/', (req, res) => {
+    res.send('Hello from Node server!');
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });

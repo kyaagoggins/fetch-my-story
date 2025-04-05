@@ -37,3 +37,18 @@ body {
 .submit {
     margin-top: 30px !important;
 }
+
+.photoQ {
+    padding: 4% 0px 4% 0px;
+    padding-bottom: 5% !important;
+}
+
+.date {
+    height: 100%;
+    width: 65%;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+}

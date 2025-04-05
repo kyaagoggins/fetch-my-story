@@ -17,6 +17,7 @@
 .adminHome {
     display: flex;
     justify-content: center;
+    zoom: 90%
 }
 
 .adminNav {
@@ -57,7 +58,7 @@
     display: flex;
     width: 400px;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 
@@ -67,7 +68,13 @@
     margin: 0 0 0 10px !important;
 }
 
-.editButtonsSingle {
+.bioButtonsSingle {
+    background-color: rgb(34, 170, 224) !important;
+    box-sizing: none;
+    margin-left: 90px !important;
+}
+
+.photoButtonsSingle {
     background-color: rgb(34, 170, 224) !important;
     box-sizing: none;
     margin-left: 110px !important;
@@ -91,4 +98,23 @@
 .rejectButton {
     background-color: rgb(228, 64, 58) !important;
     box-sizing: none;
+}
+
+.box {
+    position: 'absolute';
+    top: '50%';
+    left: '50%';
+    transform: 'translate(-50%, -50%)';
+    background-color: 'white';
+    border: '2px solid #1976d2';
+    box-shadow: 24;
+    padding: '24px';
+    width: '400px';
+    border-radius: '8px';
+    outline: 'none';
+}
+
+.textInput {
+    width: 300px;
+    margin: 10px 10px 10px 0px !important;
 }

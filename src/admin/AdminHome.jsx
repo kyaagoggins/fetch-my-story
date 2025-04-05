@@ -9,6 +9,7 @@ import EditModal from "./EditModal";
 
 const AdminHome = ({ }) => {
 
+    //state variables for stored values
     const [pets, setPets] = useState([]);
     const [attentionPets, setAttentionPets] = useState([]);
     const [approvalPets, setApprovalPets] = useState([]);
@@ -16,30 +17,40 @@ const AdminHome = ({ }) => {
     const [error, setError] = useState(null);
     
 
+    //function to get the pets from the API
     useEffect(() => {
         const fetchPets = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/pets', {
                     params: { id: 'GA612' }
                 });
+                console.log(response);
+                //check the pets returned and if the description is missing, save it to a different state
                 response.data.forEach((pet) => {
-                    if (pet.description.toLowerCase().includes('update')) {
-                        setAttentionPets((prevPets) => [...prevPets, pet]);
+                    const descMatch = pet.description?.toLowerCase().includes('update') || pet.description?.toLowerCase().includes('coming soon');
+                    const noPhotos = !pet.photos || pet.photos.length === 0;
+
+                    if (descMatch && noPhotos) {
+                        setAttentionPets((prevPets) => [...prevPets, { ...pet, needsDesc: true, needsPhotos: true }]);
+                    } else if (descMatch) {
+                        setAttentionPets((prevPets) => [...prevPets, { ...pet, needsDesc: true, needsPhotos: false }]);
+                    } else if (noPhotos) {
+                        setAttentionPets((prevPets) => [...prevPets, { ...pet, needsDesc: false, needsPhotos: true }]);
                     } else {
-                        setPets((prevPets) => [...prevPets, pet]);
+                        setPets((prevPets) => [...prevPets, { ...pet, needsDesc: false, needsPhotos: false }]);
                     }
                 }) 
-                //setPets(response.data);
+                
                 setIsLoading(false);
             } catch (error) {
                 setError('Error fetching pet data');
                 setIsLoading(false);
             }
         };
-
         fetchPets();
     }, []);
 
+    //while the page is loading
     if (isLoading) {
         return <p>Loading pets...</p>;
     }
@@ -60,7 +71,6 @@ const AdminHome = ({ }) => {
                 </IconButton>
                  {/* home button  */}
                <Fab variant="extended" className={styles.button}>Current Pets</Fab>
-               <Fab variant="extended" className={styles.button}>Statistics</Fab>
             </Grid2></div>
             <br></br>
              {/* this shows when pets are not found  */}
@@ -73,7 +83,7 @@ const AdminHome = ({ }) => {
                         <Grid2 container className={styles.petList} spacing={5}>
                             <div className={styles.title}><h2>Needs Attention</h2></div>
                             {attentionPets.map((pet) => (
-                                <PetCard key={pet.id} pet={pet} needs={'description'}/>   
+                                <PetCard key={pet.id} pet={pet} needs={'attention'}/>   
                             ))}
                         </Grid2>
                     )}
