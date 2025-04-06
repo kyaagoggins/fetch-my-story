@@ -141,7 +141,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         <DialogTitle>Photos - {title}</DialogTitle>
             <DialogContent className={styles.modal}>
                 {pet.photos.map((photo) => (
-                    <Grid2 key={photo.id} className={styles.imgContainer} margin={'10px 0px 10px 0px'}>
+                    <Grid2 key={photo.length} className={styles.imgContainer} margin={'10px 0px 10px 0px'}>
                     <img src={photo?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
                     <br></br>
                     </Grid2>

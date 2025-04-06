@@ -3,6 +3,7 @@ import styles from './FosterSMS.module.css';
 import { Button, Container, Grid2, TextField, Typography } from '@mui/material'
 import Question from "./components/Question/Question";
 import LoopIcon from '@mui/icons-material/Loop';
+import axios from 'axios';
 
 export default function FosterSMS () {
     //state variables
@@ -13,6 +14,7 @@ export default function FosterSMS () {
     const [petSex, setPetSex] = useState('male');
     const [submitted, setSubmitted] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
+    const [response, setResponse] = useState('');
 
     //runs on load 
     useEffect(() => {
@@ -65,12 +67,15 @@ export default function FosterSMS () {
         sendMessage();
     }
 
+    const prompt = "generate a pet adoption description using the following info";
+
     const sendMessage = async () => {
         try {
-          const res = await axios.post('http://localhost:3001/api/chat', {
-            prompt: input,
+          const res = await axios.post('http://localhost:3000/api/chat', {
+            prompt: prompt,
           });
           setResponse(res.data.message);
+          console.log(res);
         } catch (err) {
           console.error('Error sending message:', err);
           setResponse('Something went wrong.');

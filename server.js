@@ -1,17 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
-
 app.use(cors());
 app.use(express.json());
+
+console.log("CLIENT_ID:", process.env.CLIENT_ID);
+console.log("CLIENT_SECRET:", process.env.CLIENT_SECRET);
 
 //petfinder api server code 
 
@@ -30,6 +31,8 @@ app.get('/api/pets', async (request, result) => {
             client_secret: process.env.CLIENT_SECRET
         });
 
+        console.log('Token response:', tokenResponse.data);
+
         const accessToken = tokenResponse.data.access_token;
 
         //fetch list of pets 
@@ -45,10 +48,6 @@ app.get('/api/pets', async (request, result) => {
         console.error(error);
         result.status(500).json({ error: 'An error occurred while fetching pet data.' });
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
 });
 
 // code for chatgpt api
@@ -74,15 +73,15 @@ app.post('/api/chat', async (req, res) => {
       const message = response.data.choices[0].message.content;
       res.json({ message });
     } catch (error) {
-      console.error('Error from OpenAI:', error.response?.data || error.message);
-      res.status(500).json({ error: 'Failed to fetch from OpenAI' });
-    }
+        console.error('Error from OpenAI:', error.message);
+        if (error.response) {
+          console.error('Status:', error.response.status);
+          console.error('Data:', error.response.data);
+        }
+        res.status(500).json({ error: 'Failed to fetch from OpenAI' });
+      }
   });
-  
-  app.get('/', (req, res) => {
-    res.send('Hello from Node server!');
-  });
-  
+
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
   });
