@@ -1,8 +1,9 @@
 import React, { useState } from 'react'; 
-import { Menu } from 'primereact/menu';
-import { PrimeIcons } from 'primereact/api';
-import './Settings.module.css';
-//import 'primeicons/primeicons.css';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+
+import styles from './Settings.module.css';
+
 
 function Settings() {
   const [display, changeDisplay] = useState('petQuestions');
@@ -78,43 +79,43 @@ function Settings() {
   };
 
   const cancelNewAIPrompt = () => {
-    setAiPrompt('');
+    setAIPrompt('');
   };
   
   
   //constructor for question list with edit and delete buttons
   //trash can?
   const petQuestionsPage = () => (
-    <div class="gray-box">
-      <ul class="list">
+    <div className={styles['gray-box']}>
+      <ul className={styles['list']}>
         {petQuestions.map((question, index) => (
-          <li key={index} class="list-margin">
+          <li key={index} className={styles['list-margin']}>
             <span>{question}</span>
             <button onClick={() => {
               const editedPetQuestion = prompt("Edit Question:", question);
                 if (editedPetQuestion) changePetQuestion(index, editedPetQuestion);
-            }} class="edit-button">Edit</button>
-              <button onClick={() => deletePetQuestion(index)} class="delete-button"> <i className="pi pi-trash" style={{ fontSize: '1rem' }}></i> <span className="pi pi-trash"></span></button>
+            }} className={styles['edit-button']}>Edit</button>
+              <button onClick={() => deletePetQuestion(index)} className={styles['delete-button']}> <DeleteIcon /></button>
           </li>
         )
         )}
       </ul>
-        <input class="question-input-box"
+        <input className={styles['question-input-box']}
           type="text"
           placeholder="Type the new question here..."
           value={newPetQuestion}
           onChange={addNewPetQuestion}        
          />
-            <button onClick={setPetQuestion} class="add-question">Add Question
+            <button onClick={setPetQuestion} className={styles['add-question']}>Add Question
             </button>
 
-      <div class="button-container">
-          <div class="align-button">
-            <button onClick={commitQuestions} class="commit-question-button">Submit
+      <div className={styles['button-container']}>
+          <div className={styles['align-button']}>
+            <button onClick={commitQuestions} className={styles['commit-question-button']}>Submit
             </button>
           </div>
-          <div class="align-button">
-            <button onClick={cancelQuestionChange} class="cancel-question-button">Cancel
+          <div className={styles['align-button']}>
+            <button onClick={cancelQuestionChange} className={styles['cancel-question-button']}>Cancel
             </button>
           </div>
       </div>     
@@ -127,21 +128,21 @@ function Settings() {
 
   //constructor for text message page with submit button
   const textMessagePage = () => (
-    <div class="gray-box">
+    <div className={styles['gray-box']}>
         <textarea 
           placeholder="Type the new message here..." rows="8" cols="50"
           value={textMessage}
           onChange={(t) => setTextMessage(t.target.value)}
         > 
         </textarea>
-      <div class="button-container">
-          <div class="align-button">
+      <div className={styles['button-container']}>
+          <div className={styles['align-button']}>
           
-              <button onClick={commitText} class="commit-text-button">Submit
+              <button onClick={commitText} className={styles['commit-text-button']}>Submit
               </button>
           </div>
-          <div class="align-button">
-              <button onClick={cancelTextChange} class="cancel-text-button">Cancel
+          <div className={styles['align-button']}>
+              <button onClick={cancelTextChange} className={styles['cancel-text-button']}>Cancel
               </button>
           </div>
       </div>
@@ -154,19 +155,19 @@ function Settings() {
   //constructor for ai page with submit button
   //add best practices or ideas for ai button?  
   const AIPage = () => (
-    <div class="gray-box">
+    <div className={styles['gray-box']}>
         <textarea placeholder="Type the new AI prompt here..." rows="12" cols="50"
           value={AIPrompt}
           onChange={(a) => setAIPrompt(a.target.value)}
         >
         </textarea>
-      <div class="button-container">
-          <div class="align-button">
-            <button onClick={commitAIPrompt} class="commit-AI-button">Submit
+      <div className={styles['button-container']}>
+          <div className={styles['align-button']}>
+            <button onClick={commitAIPrompt} className={styles['commit-AI-button']}>Submit
             </button>
           </div> 
-          <div class="align-button">
-            <button onClick={cancelNewAIPrompt} class="cancel-AI-button">Cancel
+          <div className={styles['align-button']}>
+            <button onClick={cancelNewAIPrompt} className={styles['cancel-AI-button']}>Cancel
             </button>
           </div> 
         </div>     
@@ -190,28 +191,28 @@ function Settings() {
 
 return (
   <>
-  
-    <h1 class="admin-header">
+   <div className={styles.container}>
+    <h1 className={styles['admin-header']}>
 
       Admin Settings {display !== 'petQuestions' && display !== 'textMessage' && display !== 'aiPrompt' ? '' : ` > ${getCurrentPage()}`}
     </h1>
 
-    <div class="adminSettings-banner"> 
+    <div className={styles['adminsettings-banner']}> 
       <button 
     onClick={() => changeDisplay('petQuestions')} 
-    className={display === 'petQuestions' ? 'active' : ''}>
+    className={display === 'petQuestions' ? styles.active : ''}>
     Adjust Questions
   </button>
 
   <button 
     onClick={() => changeDisplay('textMessage')} 
-    className={display === 'textMessage' ? 'active' : ''}>
+    className={display === 'textMessage' ? styles.active : ''}>
     Change Text Message
   </button>
 
   <button 
     onClick={() => changeDisplay('aiPrompt')} 
-    className={display === 'aiPrompt' ? 'active' : ''}>
+    className={display === 'aiPrompt' ? styles.active : ''}>
     Configure AI Prompt
   </button>
 
@@ -226,7 +227,7 @@ return (
     {
     display === 'aiPrompt' && AIPage()
     }
-  
+  </div>
   </>
   );
 
