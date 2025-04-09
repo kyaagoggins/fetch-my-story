@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from './FosterSMS.module.css';
 import { Button, Container, Grid2, TextField, Typography } from '@mui/material'
 import Question from "./components/Question/Question";
@@ -50,6 +50,13 @@ export default function FosterSMS ({pet: propPet}) {
     }
     }, [petName, petSex, petBreed, petSpecies]); //runs when these are changed
 
+    const [petQuestions, setPetQuestions] = useState([]);
+
+    useEffect(() => {
+        const storedQuestions = JSON.parse(localStorage.getItem('petQuestions') || []);
+        setPetQuestions(storedQuestions);
+    }, []);
+
     //handle date change 
     const handleDateChange = (event) => {
         setSelectedDate(event.target.value);
@@ -91,7 +98,7 @@ export default function FosterSMS ({pet: propPet}) {
     }
 
     //prompt for chatgpt
-    const prompt = "generate a pet adoption description using the following info: ";
+    const prompt = localStorage.getItem('prompt') || "generate a pet adoption description using the following info: ";
 
     //api call to chatgpt to get the response 
     const sendMessage = async () => {
@@ -118,13 +125,22 @@ export default function FosterSMS ({pet: propPet}) {
 
             <Grid2 container className={styles.questionaire}>
                 {/* can change to mapping to allow for custom addition of questions */}
-                <Question questionId={'kids'} questionDesc={`Does ${petName} like kids`} questionResult={'like kids'} askQuestion={handleQuestion} />
+                {petQuestions.map((question) => (
+                    <Question
+                    key={question.id}
+                    questionId={question.id}
+                    questionDesc={question.text.replace('PET', petName)}
+                    questionResult={question.value}
+                    askQuestion={handleQuestion}
+                    />
+                ))}
+                {/* <Question questionId={'kids'} questionDesc={`Does ${petName} like kids`} questionResult={'like kids'} askQuestion={handleQuestion} />
                 <Question questionId={'cats'} questionDesc={`Does ${petName} like cats`} questionResult={'like cats'} askQuestion={handleQuestion} />
                 <Question questionId={'dogs'} questionDesc={`Does ${petName} like dogs`} questionResult={'like dogs'} askQuestion={handleQuestion} />
                 <Question questionId={'playful'} questionDesc={`Is ${petName} playful`} questionResult={'playful'} askQuestion={handleQuestion} />
                 <Question questionId={'gentle'} questionDesc={`Is ${petName} gentle`} questionResult={'gentle'} askQuestion={handleQuestion} />
                 <Question questionId={'cuddle'} questionDesc={`Does ${petName} like to cuddle`} questionResult={'like to cuddle'} askQuestion={handleQuestion} />
-                <Question questionId={'photos'} questionDesc={`Does ${petName} need photos`} questionResult={'photos'} askQuestion={handleQuestion} />
+                <Question questionId={'photos'} questionDesc={`Does ${petName} need photos`} questionResult={'photos'} askQuestion={handleQuestion} /> */}
                 
                 {/* div for the photo question and date picker */}
                 <Grid2 className={styles.photoQ} container display="none" id="photoDiv" direction="row">
