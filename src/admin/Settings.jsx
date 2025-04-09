@@ -1,57 +1,125 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, Grid2, Fab, TextField, MenuItem } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-
-
 import styles from './Settings.module.css';
-
-
+                           
 function Settings() {
   const [display, changeDisplay] = useState('petQuestions');
+  //ai prompt from global data
+  const [AIPrompt, setAIPrompt] = useState(localStorage.getItem('prompt') || "generate a pet adoption description using the following info: ");
 
-  //these are the default questions that will show on the screen; this needs to be rewritten to add questions from database
-  const [petQuestions, setPetQuestions] = useState([
-    "Does PET like dogs?",
-    "Does PET like cats?",
-    "Does PET like children?",
-    "Does PET like to cuddle?",
-    "Does PET like to play?",
-    "Does PET take any medications?",
-    "Anything else you'd like to add?",
-  ]);
+  //these are the default questions that will show on the screen
+  //defaulted to use global state or defaults
+  const [petQuestions, setPetQuestions] = useState(() => {
+    const storedQuestions = JSON.parse(localStorage.getItem('petQuestions')) || [
+    {id: 1, text: "Does PET like kids", value: '', result: "likes kids"},
+    {id: 2, text: "Does PET like cats", value: '', result: "likes cats"},
+    {id: 3, text: "Does PET like dogs", value: '', result: "likes dogs"},
+    {id: 4, text: "Is PET playful", value: '', result: "playful"},
+    {id: 5, text: "Is PET gentle", value: '', result: "gentle"},
+    {id: 6, text: "Does PET like to cuddle", value: '', result: "likes to cuddle"},
+    {id: 7, text: "Does PET need photos", value: '', result: "photos"},
+  ];
+  return storedQuestions;
+  });
 
+  // Update localStorage whenever petQuestions changes
+  useEffect(() => {
+    localStorage.setItem('petQuestions', JSON.stringify(petQuestions));
+  }, [petQuestions]);
 
   //constructor for questions
-  const [newPetQuestion, setNewPetQuestion] = useState('');
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
 
-  const changePetQuestion = (index, editedPetQuestion) => {
-    const editedPetQuestions = [...petQuestions];
-    editedPetQuestions[index] = editedPetQuestion;
-    setPetQuestions(editedPetQuestions);
+  //edit question submit function
+  const changePetQuestion = () => {
+    const questionText = document.getElementById("questionText").value;
+    const questionResult = document.getElementById("questionResult").value;
+
+    if (!selectedQuestion) return;
+
+    //sets edit question
+    const editedPetQuestion = {
+      ...selectedQuestion,
+      text: questionText,
+      result: questionResult,
+      value: localStorage.getItem('question' + selectedQuestion.id) 
+    }
+
+    //sets all petQuestions
+    const updatedPetQuestions = petQuestions.map(q =>
+      q.id === selectedQuestion.id ? editedPetQuestion : q
+    );
+    setPetQuestions(updatedPetQuestions);
+    
+    //updated global storage
+    localStorage.setItem(`question${selectedQuestion.id}`, questionText);
+    localStorage.setItem(`question${selectedQuestion.id}Result`, questionResult);
+    
+    setEditQuestionOpen(false);
+    setSelectedQuestion(null);
   };
 
-  // constructor for new question
-  const addNewPetQuestion = (q) => {
-    setNewPetQuestion(q.target.value);
-  };
+  //new question handles and bools
+  const [newQuestionOpen, setNewQuestionOpen] = useState(false);
+  const handleNewQuestionOpen = () => setNewQuestionOpen(true);
+  const handleNewQuestionClose = () => {setNewQuestionOpen(false);}
 
-  //constructor to set new question
-  const setPetQuestion = () => {
-    if (newPetQuestion.trim()) {
-      setPetQuestions([...petQuestions, newPetQuestion]);
-      setNewPetQuestion('');
+  //edit question handles and bools
+  const [editQuestionOpen, setEditQuestionOpen] = useState(false);
+      //handle open/close modal 
+    const handleEditQuestionOpen = (question) => {
+      setSelectedQuestion(question);
+      setEditQuestionOpen(true); 
+    }
+      const handleEditQuestionClose = () => {setEditQuestionOpen(false); setSelectedQuestion(null);}
+
+  //question modal - both edit and add new - needed so result can be defined
+  const QuestionModal = ({question, edit}) => (
+    <>
+    <Dialog open={edit ? editQuestionOpen : newQuestionOpen} onClose={edit ? handleEditQuestionClose : handleNewQuestionClose} className={styles.modal}>
+    <DialogTitle>{edit ? 'Edit' : 'New' } Question</DialogTitle>
+        <DialogContent className={styles.modal}>
+            <br></br>
+            <Grid2>
+                <TextField id="questionText" label={edit ? "Edit Question Text" : "New Question Text" } defaultValue={edit ? question.text : ''} size="medium" className={styles.textInput}></TextField>
+                <Typography id="questionResultText" className={styles.editText}>Enter the added description of this question</Typography>
+                <TextField id="questionResult" label="Ex. PET likes dogs" defaultValue={edit ? question.result : ''} size="medium" className={styles.textInput}></TextField>
+            </Grid2>
+        </DialogContent>
+        <DialogActions>
+            <Button variant="outlined" onClick={edit ? handleEditQuestionClose : handleNewQuestionClose}>Close</Button>
+            <Button variant="outlined" onClick={edit ? changePetQuestion : addNewQuestion}>Submit</Button>
+        </DialogActions>
+    </Dialog>
+    </>
+  );
+
+  //add new question 
+  const addNewQuestion = () => {
+    const questionResult = document.getElementById("questionResult").value;
+    const questionText = document.getElementById("questionText").value;
+
+    if (questionText) {
+      const newQuestion = { id: petQuestions.length + 1, text: questionText, value: '', result: questionResult };
+      setPetQuestions([...petQuestions, newQuestion]);
+
+      // Reset and close the modal
+      setNewQuestionOpen(false);
     }
   };
 
   //constructor to delete pet questions
-  const deletePetQuestion = (index) => {
-  const updatedPetQuestions = petQuestions.filter((_, i) => i !== index);
-  setPetQuestions(updatedPetQuestions);
+  const deletePetQuestion = (id) => {
+    const updatedPetQuestions = petQuestions.filter((q) => q.id !== id);
+    setPetQuestions(updatedPetQuestions);
+    localStorage.removeItem(`question${id}`);
+    localStorage.removeItem(`question${id}Result`);
   };
 
   //update this to write questions to file or database
   const commitQuestions = () => {
     console.log('Your questions have been updated!');
-
     //your code here
   };
 
@@ -64,6 +132,7 @@ function Settings() {
 
     //update this to write to file or database
   const commitAIPrompt = () => {
+    localStorage.setItem('prompt', AIPrompt);
     console.log('Your AI prompt has been updated!');
 
     //your code here
@@ -82,31 +151,20 @@ function Settings() {
     setAIPrompt('');
   };
   
-  
   //constructor for question list with edit and delete buttons
-  //trash can?
   const petQuestionsPage = () => (
     <div className={styles['gray-box']}>
       <ul className={styles['list']}>
-        {petQuestions.map((question, index) => (
-          <li key={index} className={styles['list-margin']}>
-            <span>{question}</span>
-            <button onClick={() => {
-              const editedPetQuestion = prompt("Edit Question:", question);
-                if (editedPetQuestion) changePetQuestion(index, editedPetQuestion);
-            }} className={styles['edit-button']}>Edit</button>
-              <button onClick={() => deletePetQuestion(index)} className={styles['delete-button']}> <DeleteIcon /></button>
+        {petQuestions.map((question) => (
+          <li key={question.id} className={styles['list-margin']}>
+            <span>{question.text}</span>
+            <button onClick={() => handleEditQuestionOpen(question)} className={styles['edit-button']}>Edit</button>
+            <button onClick={() => deletePetQuestion(question.id)} className={styles['delete-button']}> <DeleteIcon /></button>
           </li>
         )
         )}
       </ul>
-        <input className={styles['question-input-box']}
-          type="text"
-          placeholder="Type the new question here..."
-          value={newPetQuestion}
-          onChange={addNewPetQuestion}        
-         />
-            <button onClick={setPetQuestion} className={styles['add-question']}>Add Question
+            <button onClick={handleNewQuestionOpen} className={styles['add-question']}>Add Question
             </button>
 
       <div className={styles['button-container']}>
@@ -125,7 +183,6 @@ function Settings() {
   //constructor to handle text
   const [textMessage, setTextMessage] = useState('');
   
-
   //constructor for text message page with submit button
   const textMessagePage = () => (
     <div className={styles['gray-box']}>
@@ -148,9 +205,6 @@ function Settings() {
       </div>
     </div>
   );
-
-  //constructor to handle changes
-  const [AIPrompt, setAIPrompt] = useState('');
   
   //constructor for ai page with submit button
   //add best practices or ideas for ai button?  
@@ -188,9 +242,10 @@ function Settings() {
     }
   };
   
-
 return (
   <>
+  {selectedQuestion && <QuestionModal question={selectedQuestion} edit={true} />}
+  {newQuestionOpen && <QuestionModal question={null} edit={false} />}
    <div className={styles.container}>
     <h1 className={styles['admin-header']}>
 
