@@ -1,4 +1,4 @@
-import { Button, Grid2 } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import styles from "./PetCard.module.css"
 import EditIcon from '@mui/icons-material/Edit';
@@ -47,7 +47,12 @@ function PetCard ({ pet, needs }) {
                 <span id='badge' className={styles.badge}><DoneOutlineIcon /></span>
             )}
             <Grid2 className={styles.imgContainer}>
-                <img src={pet.photos[0]?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
+                {pet.photos[0]?.large ? (
+                   <img src={pet.photos[0]?.large} alt={pet.name} width='100%'/> 
+                ) : (
+                    <h3>No Photos Available</h3>
+                )}
+                
             </Grid2>
             <div><p>{pet.name}</p></div>
         </Grid2>

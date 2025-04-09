@@ -1,21 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import styles from './FosterSMS.module.css';
 import { Button, Container, Grid2, TextField, Typography } from '@mui/material'
 import Question from "./components/Question/Question";
 import LoopIcon from '@mui/icons-material/Loop';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
-export default function FosterSMS () {
+export default function FosterSMS ({pet: propPet}) {
+
+    //checks for a pet being passed
+    const location = useLocation();
+    const passedPet = location.state?.pet;
+
+    //default pet for page loading 
+    const defaultPet = {
+        name: 'Momo',
+        breeds: { primary: 'Tuxedo Long Hair' },
+        species: 'cat',
+        gender: 'male',
+    }
+
+    const pet = propPet || passedPet || defaultPet;
+
     //state variables
     const [description, setDescription] = useState('');
-    const [petName, setPetName] = useState('Momo');
-    const [petBreed, setPetBreed] = useState('Tuxedo Long Hair');
-    const [petSpecies, setPetSpecies] = useState('cat');
-    const [petSex, setPetSex] = useState('male');
+    const [petName, setPetName] = useState('');
+    const [petBreed, setPetBreed] = useState('');
+    const [petSpecies, setPetSpecies] = useState('');
+    const [petSex, setPetSex] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
+    const [response, setResponse] = useState('');
 
     //runs on load 
     useEffect(() => {
+        console.log('Loaded Pet', pet);
+
+        setPetBreed(pet.breeds?.primary || 'Unknown Breed');
+        setPetName(pet.name);
+        setPetSpecies(pet.species);
+        setPetSex(pet.gender);
+
         setDescription(`${petName} is a ${petSex} ${petBreed} ${petSpecies}.`);
 
         //set petname in ui
@@ -65,12 +90,18 @@ export default function FosterSMS () {
         sendMessage();
     }
 
+    //prompt for chatgpt
+    const prompt = "generate a pet adoption description using the following info: ";
+
+    //api call to chatgpt to get the response 
     const sendMessage = async () => {
         try {
-          const res = await axios.post('http://localhost:3001/api/chat', {
-            prompt: input,
+          const res = await axios.post('http://localhost:3000/api/chat', {
+            prompt: prompt + description,
           });
           setResponse(res.data.message);
+          setDescription(res.data.message);
+          console.log(res);
         } catch (err) {
           console.error('Error sending message:', err);
           setResponse('Something went wrong.');

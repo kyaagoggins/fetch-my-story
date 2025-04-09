@@ -11,6 +11,15 @@
     font-style: normal;
 
 }
+.active {}
+
+.container {
+max-width: 800px;
+margin:0 auto;
+padding: 20px;
+text-align: center;
+}
+
 
 body{
     font-family:'Roboto';
@@ -47,20 +56,23 @@ button.active {
 
 /* This is the little trashcan icon */
 .delete-button{
+  color: #000000;
   background-color: #ffffff;
-  font-size: 16px;
+  font-size: 8px;
   margin-left: 10px;
 }
 
 /* This is the breadcrumbs header */
 .admin-header{
-  font-size: 32px;
-  margin-top: 150px;
+ 
+  font-size: 24px;
+  margin-top: 30px;
   margin-bottom: 20px;
 }
 
 /* This adjusts the space between the yellow/blue header and the gray box  */
 .adminSettings-banner{
+
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -68,8 +80,9 @@ button.active {
 /* This is a lovely gray box I found on Reddit. */
 .gray-box{
   position: relative;
-  width: 450px;
+  width: 430px;
   margin: auto;
+  padding: 20px;
   background-color: #fff;
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -moz-border-radius: 4px 4px 4px 4px;
@@ -79,11 +92,12 @@ button.active {
   border-style: solid;
   border-width: 1px;
   height: 650px;
-  width: 450px;
-  padding: 30px;
+border-radius: 12px;
+  /* padding: 30px; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* This is the align for the edit buttons */
@@ -137,6 +151,6 @@ button.active {
 /* this is the inside container to make the submit and cancel buttons sit nicely on the same line*/
 .align-button {
   display:inline-block;
-  margin: 10px;
+  margin: 36px;
 }
 /* all individual submit and cancel buttons are classed differently in case anyone wants to change a particular color*/

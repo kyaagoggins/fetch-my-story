@@ -1,9 +1,12 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, Grid2, Fab, TextField, MenuItem } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import styles from "./Admin.module.css"
 import LoopIcon from '@mui/icons-material/Loop';
 
 function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
+
+    const navigate = useNavigate();
 
     const [viewBioOpen, setViewBioOpen] = useState(false);
     //handle open/close modal 
@@ -28,6 +31,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
 
     //function to decode the pet descriptions 
     function decodeAndFormatDescription(description) {
+        //console.log(description);
         // Decode HTML entities
         const parser = new DOMParser();
         const decoded = parser.parseFromString(description, 'text/html').body.textContent;
@@ -101,8 +105,16 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             }, 3000);
         } else {
             //send request stuff to foster with that info 
+
             setRequested(true);
-            setTimeout(() => {handleCloseReq()}, 3000)
+            setTimeout(() => {
+                handleCloseReq();
+                navigate('/foster-sms', {
+                    state: {
+                        pet: pet
+                    }
+                });
+            }, 3000)
         }
     }
 
@@ -140,12 +152,17 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         <Dialog open={viewPhotosOpen} onClose={handleClosePhotos} className={styles.modal}>
         <DialogTitle>Photos - {title}</DialogTitle>
             <DialogContent className={styles.modal}>
-                {pet.photos.map((photo) => (
-                    <Grid2 key={photo.id} className={styles.imgContainer} margin={'10px 0px 10px 0px'}>
-                    <img src={photo?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
+                {pet.photos && pet.photos.length > 0 ? (
+                    pet.photos.map((photo, index) => (
+                    <Grid2 key={index} className={styles.imgContainer} margin={'10px 0px 10px 0px'}>
+                    <img src={photo?.large} alt={pet.name} width='100%'/>
                     <br></br>
                     </Grid2>
-                ))}
+                ))
+                ) : (
+                    <h3>No Photos Found</h3>
+                )}
+                
             </DialogContent>
             <DialogActions>
                 <Button variant="outlined" onClick={handleClosePhotos}>Close</Button>
@@ -159,7 +176,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         //request add photos modal 
         const addPhotoModal = (
             <>
-            <Dialog open={addPhotoOpen} onClose={handleAddPhoto} className={styles.modal}>
+            <Dialog open={addPhotoOpen} onClose={handleCloseAddPhoto} className={styles.modal}>
             <DialogTitle>Request Photos - {title}</DialogTitle>
                 <DialogContent className={styles.modal}>
                     <br></br>
@@ -177,7 +194,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                     </Grid2>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleCloseReq}>Close</Button>
+                    <Button variant="outlined" onClick={handleCloseAddPhoto}>Close</Button>
                     <Button variant="outlined" onClick={requestPhotos} endIcon={reqAdd ? <LoopIcon /> : null}>Send Request</Button>
                 </DialogActions>
             </Dialog>
@@ -217,7 +234,12 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             <DialogTitle>{title}</DialogTitle>
             <DialogContent className={styles.modalContent}>
             <Grid2 className={styles.imgContainer}>
-                <img src={pet.photos[0]?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
+                {pet.photos[0]?.large ? (
+                    <img src={pet.photos[0]?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
+                ) : (
+                    <h3>No Photos Found</h3>
+                )}
+                
             </Grid2>
             {/* need description view for modal - else is the view for not needing desc */}
             {needDesc ? (
@@ -243,7 +265,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                 <Typography className={styles.editText}>{pet.name} needs new photos.</Typography>
                 <br></br>
                 <Fab variant="extended" size="small" onClick={handleOpenPhotos} className={styles.editButtonsDuo}>View Photos</Fab>
-                <Fab variant="extended" size="small" onClick={handleClose} className={styles.editButtonsDuo}>Add Photos</Fab>
+                <Fab variant="extended" size="small" onClick={handleAddPhoto} className={styles.editButtonsDuo}>Add Photos</Fab>
             </Grid2>
             ) : (
                 <Grid2 id="goodPhotosDiv">

@@ -1,14 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
-
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
@@ -24,6 +22,8 @@ app.get('/api/pets', async (request, result) => {
         }
 
         //get token 
+        //process.env is a .env file with the api keys stored as values
+        //process.env.CLIENT_ID is CLIENT_ID=xxxxxxxx in .env
         const tokenResponse = await axios.post('https://api.petfinder.com/v2/oauth2/token', {
             grant_type: 'client_credentials',
             client_id: process.env.CLIENT_ID,
@@ -47,13 +47,10 @@ app.get('/api/pets', async (request, result) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
-
 // code for chatgpt api
 
 app.post('/api/chat', async (req, res) => {
+    console.log("Chat hit");
     const { prompt } = req.body;
   
     try {
@@ -74,15 +71,15 @@ app.post('/api/chat', async (req, res) => {
       const message = response.data.choices[0].message.content;
       res.json({ message });
     } catch (error) {
-      console.error('Error from OpenAI:', error.response?.data || error.message);
-      res.status(500).json({ error: 'Failed to fetch from OpenAI' });
-    }
+        console.error('Error from OpenAI:', error.message);
+        if (error.response) {
+          console.error('Status:', error.response.status);
+          console.error('Data:', error.response.data);
+        }
+        res.status(500).json({ error: 'Failed to fetch from OpenAI' });
+      }
   });
-  
-  app.get('/', (req, res) => {
-    res.send('Hello from Node server!');
-  });
-  
+
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
   });
