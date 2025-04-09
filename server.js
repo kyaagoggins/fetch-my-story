@@ -11,9 +11,6 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-console.log("CLIENT_ID:", process.env.CLIENT_ID);
-console.log("CLIENT_SECRET:", process.env.CLIENT_SECRET);
-
 //petfinder api server code 
 
 //get route for get pets 
@@ -25,13 +22,13 @@ app.get('/api/pets', async (request, result) => {
         }
 
         //get token 
+        //process.env is a .env file with the api keys stored as values
+        //process.env.CLIENT_ID is CLIENT_ID=xxxxxxxx in .env
         const tokenResponse = await axios.post('https://api.petfinder.com/v2/oauth2/token', {
             grant_type: 'client_credentials',
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET
         });
-
-        console.log('Token response:', tokenResponse.data);
 
         const accessToken = tokenResponse.data.access_token;
 
@@ -53,6 +50,7 @@ app.get('/api/pets', async (request, result) => {
 // code for chatgpt api
 
 app.post('/api/chat', async (req, res) => {
+    console.log("Chat hit");
     const { prompt } = req.body;
   
     try {
