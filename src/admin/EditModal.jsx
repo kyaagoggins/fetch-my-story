@@ -8,6 +8,9 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
 
     const navigate = useNavigate();
 
+    //sets url for sms message 
+    const [smsUrl, setSmsUrl] = useState('');
+
     const [viewBioOpen, setViewBioOpen] = useState(false);
     //handle open/close modal 
     const handleOpenBio = () => setViewBioOpen(true);
@@ -60,7 +63,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
     //select options for phone types 
     const phoneTypes = [
         {
-            value: ""
+            value: ''
         },
         {
             value: "Android"
@@ -87,6 +90,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         </>
     );
 
+    //requested bool state 
     const [requested, setRequested] = useState(false);
 
     //function to handle checking input fields and requesting a bio
@@ -107,13 +111,12 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             //send request stuff to foster with that info 
 
             setRequested(true);
+            if (phoneType === "Android") setSmsUrl(`sms:${phoneNum || ''}?body=${localStorage.getItem('textMessage')}`);
+            if (phoneType === "iPhone") setSmsUrl(`sms:${phoneNum || ''}&body=${localStorage.getItem('textMessage')}`);
+            
+            
             setTimeout(() => {
-                handleCloseReq();
-                navigate('/foster-sms', {
-                    state: {
-                        pet: pet
-                    }
-                });
+                window.location.href = smsUrl;
             }, 3000)
         }
     }

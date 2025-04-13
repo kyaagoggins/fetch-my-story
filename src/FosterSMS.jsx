@@ -20,6 +20,7 @@ export default function FosterSMS ({pet: propPet}) {
         gender: 'male',
     }
 
+    //sets pet to default or passed pet 
     const pet = propPet || passedPet || defaultPet;
 
     //state variables
@@ -34,13 +35,14 @@ export default function FosterSMS ({pet: propPet}) {
 
     //runs on load 
     useEffect(() => {
-        console.log('Loaded Pet', pet);
 
+        //sets pet details 
         setPetBreed(pet.breeds?.primary || 'Unknown Breed');
         setPetName(pet.name);
         setPetSpecies(pet.species);
         setPetSex(pet.gender);
 
+        //updates description 
         setDescription(`${petName} is a ${petSex} ${petBreed} ${petSpecies}.`);
 
         //set petname in ui
@@ -52,6 +54,7 @@ export default function FosterSMS ({pet: propPet}) {
 
     const [petQuestions, setPetQuestions] = useState([]);
 
+    //recieves pet questions from the local state as passed from settings 
     useEffect(() => {
         const storedQuestions = JSON.parse(localStorage.getItem('petQuestions') || []);
         setPetQuestions(storedQuestions);
@@ -108,7 +111,6 @@ export default function FosterSMS ({pet: propPet}) {
           });
           setResponse(res.data.message);
           setDescription(res.data.message);
-          console.log(res);
         } catch (err) {
           console.error('Error sending message:', err);
           setResponse('Something went wrong.');
@@ -124,7 +126,7 @@ export default function FosterSMS ({pet: propPet}) {
             <p id='info'>Answer a few questions to help us create an awesome pet description for <span className="petName"></span>.</p>
 
             <Grid2 container className={styles.questionaire}>
-                {/* can change to mapping to allow for custom addition of questions */}
+                {/* map function of all current pet questions as set in the settings of the app */}
                 {petQuestions.map((question) => (
                     <Question
                     key={question.id}
@@ -134,14 +136,7 @@ export default function FosterSMS ({pet: propPet}) {
                     askQuestion={handleQuestion}
                     />
                 ))}
-                {/* <Question questionId={'kids'} questionDesc={`Does ${petName} like kids`} questionResult={'like kids'} askQuestion={handleQuestion} />
-                <Question questionId={'cats'} questionDesc={`Does ${petName} like cats`} questionResult={'like cats'} askQuestion={handleQuestion} />
-                <Question questionId={'dogs'} questionDesc={`Does ${petName} like dogs`} questionResult={'like dogs'} askQuestion={handleQuestion} />
-                <Question questionId={'playful'} questionDesc={`Is ${petName} playful`} questionResult={'playful'} askQuestion={handleQuestion} />
-                <Question questionId={'gentle'} questionDesc={`Is ${petName} gentle`} questionResult={'gentle'} askQuestion={handleQuestion} />
-                <Question questionId={'cuddle'} questionDesc={`Does ${petName} like to cuddle`} questionResult={'like to cuddle'} askQuestion={handleQuestion} />
-                <Question questionId={'photos'} questionDesc={`Does ${petName} need photos`} questionResult={'photos'} askQuestion={handleQuestion} /> */}
-                
+
                 {/* div for the photo question and date picker */}
                 <Grid2 className={styles.photoQ} container display="none" id="photoDiv" direction="row">
                 <Typography variant="" component="h4">When does {petName} need photos?</Typography>
@@ -154,7 +149,7 @@ export default function FosterSMS ({pet: propPet}) {
                     />
                 </Grid2>
 
-                {/* div for the what else question         */}
+                {/* div for the what else question  */}
                 <Grid2 size={8} id='whatElseGrid' container direction="row">
                 <h4>What else should people know about {petName}?</h4>
                 <TextField className={styles.else} id='whatElse'></TextField>
@@ -163,7 +158,6 @@ export default function FosterSMS ({pet: propPet}) {
                 <Grid2 size={6} className={styles.submit}>
                     <Button variant='contained' id='submitButton' onClick={submit} endIcon={submitted ? <LoopIcon /> : null}>Submit</Button>
                 </Grid2>
-                
             </Grid2>
         </Container>
     );

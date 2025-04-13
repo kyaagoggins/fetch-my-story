@@ -3,6 +3,7 @@ import cors from 'cors';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
+//import .env file for api keys 
 dotenv.config();
 
 const app = express();
@@ -50,7 +51,7 @@ app.get('/api/pets', async (request, result) => {
 // code for chatgpt api
 
 app.post('/api/chat', async (req, res) => {
-    console.log("Chat hit");
+  //prompt is request body being sent 
     const { prompt } = req.body;
   
     try {
@@ -80,6 +81,7 @@ app.post('/api/chat', async (req, res) => {
       }
   });
 
+  //ensure the localhost port for the server is running 
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
   });

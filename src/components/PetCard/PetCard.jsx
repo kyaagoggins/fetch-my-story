@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import EditModal from "../../admin/EditModal";
 
-
+//pet card for admin view 
 function PetCard ({ pet, needs }) {
 
     //state variables 

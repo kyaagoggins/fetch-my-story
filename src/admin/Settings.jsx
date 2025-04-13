@@ -8,6 +8,9 @@ function Settings() {
   //ai prompt from global data
   const [AIPrompt, setAIPrompt] = useState(localStorage.getItem('prompt') || "generate a pet adoption description using the following info: ");
 
+  //constructor to handle text
+  const [textMessage, setTextMessage] = useState(localStorage.getItem('textMessage') || '');
+
   //these are the default questions that will show on the screen
   //defaulted to use global state or defaults
   const [petQuestions, setPetQuestions] = useState(() => {
@@ -125,6 +128,7 @@ function Settings() {
 
     //update this to write to or update twillio
   const commitText = () => {
+    localStorage.setItem('textMessage', textMessage);
     console.log('Your text message has been updated!');
 
     //your code here
@@ -179,9 +183,6 @@ function Settings() {
       </div>     
     </div>
   );
-
-  //constructor to handle text
-  const [textMessage, setTextMessage] = useState('');
   
   //constructor for text message page with submit button
   const textMessagePage = () => (
