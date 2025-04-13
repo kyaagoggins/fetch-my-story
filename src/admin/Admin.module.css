@@ -17,7 +17,7 @@
 .adminHome {
     display: flex;
     justify-content: center;
-    zoom: 90%
+    zoom: 70%
 }
 
 .adminNav {
@@ -117,4 +117,15 @@
 .textInput {
     width: 300px;
     margin: 10px 10px 10px 0px !important;
+}
+
+@media only screen and (max-width: 900px) {
+    .modal {
+        width: 100%; 
+        max-width: 450px; 
+    }
+
+    .modalContent {
+        width: 300px;
+    }
 }

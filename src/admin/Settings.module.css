@@ -1,4 +1,4 @@
-/* correct typeface? */
+/* correct typeface */
 @font-face {
     font-family: 'robotoregular';
     src: url('Roboto-Regular-webfont.eot');
@@ -11,7 +11,6 @@
     font-style: normal;
 
 }
-.active {}
 
 .container {
 max-width: 800px;
@@ -19,7 +18,6 @@ margin:0 auto;
 padding: 20px;
 text-align: center;
 }
-
 
 body{
     font-family:'Roboto';
@@ -77,27 +75,24 @@ button.active {
   margin-bottom: 20px;
 }
 
-/* This is a lovely gray box I found on Reddit. */
 .gray-box{
   position: relative;
-  width: 430px;
-  margin: auto;
   padding: 20px;
+  margin: auto;
   background-color: #fff;
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -moz-border-radius: 4px 4px 4px 4px;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 4px 4px 4px 4px;
-  border-color: #E5E5E5 #DBDBDB #D2D2D2;
-  border-style: solid;
-  border-width: 1px;
   height: 650px;
-border-radius: 12px;
-  /* padding: 30px; */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 430px;
+  border: 1px solid #E5E5E5;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  justify-content: center;
 }
 
 /* This is the align for the edit buttons */
@@ -179,4 +174,43 @@ border-radius: 15px;
 .textInput {
   width: 100%;
   margin: 10px 10px 10px 0px !important;
+}
+
+/* 
+mobile responsive styling */
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 90%;            
+    max-width: 800px;      
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .admin-header {
+    font-size: 20px;
+  }
+
+  .body {
+    max-width: 400px;
+  }
+
+  .gray-box {
+    width: 450px;
+    padding: 15px;
+  }
+
+  .modal {
+    width: 100%; 
+    max-width: 450px; 
+  }
+.modalContent {
+    width: 300px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
 }
