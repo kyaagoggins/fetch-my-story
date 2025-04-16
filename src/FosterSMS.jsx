@@ -4,13 +4,17 @@ import { Button, Container, Grid2, TextField, Typography } from '@mui/material'
 import Question from "./components/Question/Question";
 import LoopIcon from '@mui/icons-material/Loop';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 export default function FosterSMS ({pet: propPet}) {
 
     //checks for a pet being passed
     const location = useLocation();
     const passedPet = location.state?.pet;
+
+    //checks for a pet being passed via url 
+    const [searchParams] = useSearchParams();
+    const petId = searchParams.get('petId');
 
     //default pet for page loading 
     const defaultPet = {
@@ -20,8 +24,8 @@ export default function FosterSMS ({pet: propPet}) {
         gender: 'male',
     }
 
-    //sets pet to default or passed pet 
-    const pet = propPet || passedPet || defaultPet;
+    //sets pet to the pet being passed through url or props or default
+    const pet = petId ? JSON.parse(localStorage.getItem(`pet-${petId}`)) : propPet || passedPet || defaultPet;
 
     //state variables
     const [description, setDescription] = useState('');
@@ -30,7 +34,7 @@ export default function FosterSMS ({pet: propPet}) {
     const [petSpecies, setPetSpecies] = useState('');
     const [petSex, setPetSex] = useState('');
     const [submitted, setSubmitted] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
     const [response, setResponse] = useState('');
 
     //runs on load 
@@ -71,7 +75,7 @@ export default function FosterSMS ({pet: propPet}) {
         if (element) element.style.display = "none";
 
         //handles case for thee photo question
-        if (id == 'photos') {
+        if (desc == 'photos') {
             if (answer == 'Yes') {
                 document.getElementById("photoDiv").style.display="flex";
             }
@@ -97,7 +101,7 @@ export default function FosterSMS ({pet: propPet}) {
         document.getElementById("whatElseGrid").style.display="none";
         setDescription(description + " " + whatElse + ".");
         document.getElementById("info").innerHTML =`Thanks for giving ${petName} a better description! Please wait while we use AI to clean this up a bit...`;
-        sendMessage();
+        sendMessage() 
     }
 
     //prompt for chatgpt
@@ -110,7 +114,12 @@ export default function FosterSMS ({pet: propPet}) {
             prompt: prompt + description,
           });
           setResponse(res.data.message);
-          setDescription(res.data.message);
+          if (document.getElementById("photoDiv").style.display==="flex") {
+            setDescription(res.data.message + " Please schedule photos for this pet for " + selectedDate + ".");
+          } else {
+            setDescription(res.data.message);
+          }
+          
         } catch (err) {
           console.error('Error sending message:', err);
           setResponse('Something went wrong.');
@@ -132,7 +141,7 @@ export default function FosterSMS ({pet: propPet}) {
                     key={question.id}
                     questionId={question.id}
                     questionDesc={question.text.replace('PET', petName)}
-                    questionResult={question.value}
+                    questionResult={question.result}
                     askQuestion={handleQuestion}
                     />
                 ))}

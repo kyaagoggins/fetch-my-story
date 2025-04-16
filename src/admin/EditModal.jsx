@@ -10,6 +10,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
 
     //sets url for sms message 
     const [smsUrl, setSmsUrl] = useState('');
+    const [petUrl, setPetUrl] = useState('');
 
     const [viewBioOpen, setViewBioOpen] = useState(false);
     //handle open/close modal 
@@ -109,15 +110,25 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             }, 3000);
         } else {
             //send request stuff to foster with that info 
+            //url for php code
+            //setPetUrl("fetchmystory.com/foster-view.php?params=" + pet.id + "X" + phoneNum);
+            //url for react code 
+
+            //create link for foster sms with this pets info
+            const petKey = `pet-${pet.id}`;
+            localStorage.setItem(petKey, JSON.stringify(pet));
+
+            const link = `${window.location.origin}/foster-sms?petId=${pet.id}`;
+            setPetUrl(link);
 
             setRequested(true);
-            if (phoneType === "Android") setSmsUrl(`sms:${phoneNum || ''}?body=${localStorage.getItem('textMessage')}`);
-            if (phoneType === "iPhone") setSmsUrl(`sms:${phoneNum || ''}&body=${localStorage.getItem('textMessage')}`);
+            if (phoneType === "Android") setSmsUrl(`sms:${phoneNum || ''}?body=${localStorage.getItem('textMessage') + " " + petUrl}`);
+            if (phoneType === "iPhone") setSmsUrl(`sms:${phoneNum || ''}&body=${localStorage.getItem('textMessage') + " " + petUrl}`);
             
-            
+            //demo purposes => sending us to the link the user would hypothetically get
             setTimeout(() => {
-                window.location.href = smsUrl;
-            }, 3000)
+                window.location.href = petUrl;
+            }, 2000)
         }
     }
 

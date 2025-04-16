@@ -9,19 +9,19 @@ function Settings() {
   const [AIPrompt, setAIPrompt] = useState(localStorage.getItem('prompt') || "generate a pet adoption description using the following info: ");
 
   //constructor to handle text
-  const [textMessage, setTextMessage] = useState(localStorage.getItem('textMessage') || '');
+  const [textMessage, setTextMessage] = useState(localStorage.getItem('textMessage') || 'Hi! When you have a minute can you use this link to give your foster pet a better description, thanks!');
 
   //these are the default questions that will show on the screen
   //defaulted to use global state or defaults
   const [petQuestions, setPetQuestions] = useState(() => {
     const storedQuestions = JSON.parse(localStorage.getItem('petQuestions')) || [
-    {id: 1, text: "Does PET like kids", value: '', result: "likes kids"},
-    {id: 2, text: "Does PET like cats", value: '', result: "likes cats"},
-    {id: 3, text: "Does PET like dogs", value: '', result: "likes dogs"},
-    {id: 4, text: "Is PET playful", value: '', result: "playful"},
-    {id: 5, text: "Is PET gentle", value: '', result: "gentle"},
-    {id: 6, text: "Does PET like to cuddle", value: '', result: "likes to cuddle"},
-    {id: 7, text: "Does PET need photos", value: '', result: "photos"},
+    {id: 1, text: "Does PET like kids", result: "likes kids"},
+    {id: 2, text: "Does PET like cats", result: "likes cats"},
+    {id: 3, text: "Does PET like dogs", result: "likes dogs"},
+    {id: 4, text: "Is PET playful", result: "playful"},
+    {id: 5, text: "Is PET gentle", result: "gentle"},
+    {id: 6, text: "Does PET like to cuddle", result: "likes to cuddle"},
+    {id: 7, text: "Does PET need photos", result: "photos"},
   ];
   return storedQuestions;
   });
@@ -46,18 +46,17 @@ function Settings() {
       ...selectedQuestion,
       text: questionText,
       result: questionResult,
-      value: localStorage.getItem('question' + selectedQuestion.id) 
+      //value: localStorage.getItem('question' + selectedQuestion.id) 
     }
 
     //sets all petQuestions
     const updatedPetQuestions = petQuestions.map(q =>
-      q.id === selectedQuestion.id ? editedPetQuestion : q
+      q.id === selectedQuestion.id ? {...q, text: questionText, result: questionResult} : q
     );
     setPetQuestions(updatedPetQuestions);
     
     //updated global storage
-    localStorage.setItem(`question${selectedQuestion.id}`, questionText);
-    localStorage.setItem(`question${selectedQuestion.id}Result`, questionResult);
+    localStorage.setItem('petQuestions', JSON.stringify(updatedPetQuestions));
     
     setEditQuestionOpen(false);
     setSelectedQuestion(null);
@@ -87,7 +86,7 @@ function Settings() {
             <Grid2>
                 <TextField id="questionText" label={edit ? "Edit Question Text" : "New Question Text" } defaultValue={edit ? question.text : ''} size="medium" className={styles.textInput}></TextField>
                 <Typography id="questionResultText" className={styles.editText}>Enter the added description of this question</Typography>
-                <TextField id="questionResult" label="Ex. PET likes dogs" defaultValue={edit ? question.result : ''} size="medium" className={styles.textInput}></TextField>
+                <TextField id="questionResult" label="Ex. likes dogs" defaultValue={edit ? question.result : ''} size="medium" className={styles.textInput}></TextField>
             </Grid2>
         </DialogContent>
         <DialogActions>
@@ -104,7 +103,7 @@ function Settings() {
     const questionText = document.getElementById("questionText").value;
 
     if (questionText) {
-      const newQuestion = { id: petQuestions.length + 1, text: questionText, value: '', result: questionResult };
+      const newQuestion = { id: petQuestions.length + 1, text: questionText, result: questionResult };
       setPetQuestions([...petQuestions, newQuestion]);
 
       // Reset and close the modal
