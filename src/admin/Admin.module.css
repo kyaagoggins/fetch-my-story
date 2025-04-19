@@ -1,3 +1,7 @@
+/* This page is the css page for the admin home sections, including the admin home component 
+and the edit modal component  */
+
+/* class styling for the pet grids in the differing categories  */
 .petList {
     border: solid;
     display: flex;
@@ -8,18 +12,21 @@
     
 }
 
+/* title styling  */
 .title {
     width: 100%;
     padding: 1% 0% 0% 2%;
     margin-bottom: -1%;
 }
 
+/* styling for the general homepage  */
 .adminHome {
     display: flex;
     justify-content: center;
     zoom: 70%
 }
 
+/* styling for the admin nav buttons such as the settings button */
 .adminNav {
     display: flex;
     flex-direction: column;
@@ -28,15 +35,13 @@
     padding-left: 3%;
 }
 
-.button {
-    background-color: rgb(242, 196, 13) !important;
-}
-
+/* coloring styling for settings button */
 .settingsButton {
     background-color: black !important;
     color: white !important;
 }
 
+/* styling for the container that holds the pets picture on the homepage */
 .imgContainer {
     height: 300px;
     overflow: hidden;
@@ -47,6 +52,7 @@
     max-height: 300px;
 }
 
+/* edit modal styling sizing */
 .modal {
     width: 80%; 
   max-width: 600px; 
@@ -54,6 +60,7 @@
   border-radius: 15px; 
 }
 
+/* edit modal content styling to ensure spacing  */
 .modalContent {
     display: flex;
     width: 400px;
@@ -62,44 +69,40 @@
     align-items: center;
 }
 
+/* coloring definition and spacing  */
 .editButtonsDuo {
     background-color: rgb(34, 170, 224) !important;
     box-sizing: none;
     margin: 0 0 0 10px !important;
 }
 
+/* button spacing if there is only one button */
 .bioButtonsSingle {
     background-color: rgb(34, 170, 224) !important;
     box-sizing: none;
     margin-left: 90px !important;
 }
 
+/* button spacing if there is only one button */
 .photoButtonsSingle {
     background-color: rgb(34, 170, 224) !important;
     box-sizing: none;
     margin-left: 110px !important;
 }
 
+/* modal text */
 .editText {
     display: flex;
     justify-content: center;
 }
 
+/* button styling  */
 .editModalButtons {
     display: flex;
     justify-content: center !important;
 }
 
-.publishButton {
-    background-color: rgb(105, 219, 52) !important;
-    box-sizing: none;
-}
-
-.rejectButton {
-    background-color: rgb(228, 64, 58) !important;
-    box-sizing: none;
-}
-
+/* styling for photos box */
 .box {
     position: 'absolute';
     top: '50%';
@@ -114,11 +117,14 @@
     outline: 'none';
 }
 
+/* input field styling  */
 .textInput {
     width: 300px;
     margin: 10px 10px 10px 0px !important;
 }
 
+/* mobile display handling 
+this changes the class values if the display is on modal rather than desktop */
 @media only screen and (max-width: 900px) {
     .modal {
         width: 100%; 

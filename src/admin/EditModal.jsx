@@ -1,47 +1,53 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, Grid2, Fab, TextField, MenuItem } from "@mui/material";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState} from "react";
 import styles from "./Admin.module.css"
 import LoopIcon from '@mui/icons-material/Loop';
 
+/*
+Edit Modal Component is the Modal for when a pet is clicked on in the admin home area. The Edit modal displays information 
+that is specific to the individual pet that was selected, hence the need to pass the pet state from the admin home 
+*/
 function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
 
-    const navigate = useNavigate();
-
-    //sets url for sms message 
+    //sets url for sms messaging
     const [smsUrl, setSmsUrl] = useState('');
     const [petUrl, setPetUrl] = useState('');
 
+    //states for the view bio modal to handle closing and opening
     const [viewBioOpen, setViewBioOpen] = useState(false);
     //handle open/close modal 
     const handleOpenBio = () => setViewBioOpen(true);
     const handleCloseBio = () => setViewBioOpen(false);
 
+    //states for the request bio modal to handle closing and opening
     const [requestBioOpen, setRequestBioOpen] = useState(false);
     //handle open/close modal 
     const handleOpenReq = () => setRequestBioOpen(true);
     const handleCloseReq = () => setRequestBioOpen(false);
 
-
+    //states for the view photos modal to handle closing and opening
     const [viewPhotosOpen, setViewPhotosOpen] = useState(false);
     //handle open/close modal 
     const handleOpenPhotos = () => setViewPhotosOpen(true);
     const handleClosePhotos = () => setViewPhotosOpen(false);
 
+    //states for the add photos modal to handle closing and opening
     const [addPhotoOpen, setAddPhotoOpen] = useState(false);
     //handle open/close modal 
     const handleAddPhoto = () => setAddPhotoOpen(true);
     const handleCloseAddPhoto = () => setAddPhotoOpen(false);
 
-    //function to decode the pet descriptions 
+    /*function to decode the pet descriptions
+    This function gets the pet descriptions, and replaces the text where there is any parsed characters
+    and replaces it for the correct character. Such as /&quot;/ meaning "" (quotation marks)
+     */
     function decodeAndFormatDescription(description) {
-        //console.log(description);
-        // Decode HTML entities
+        // Decode HTML entities tool
         const parser = new DOMParser();
         const decoded = parser.parseFromString(description, 'text/html').body.textContent;
       
         // Manually decode specific entities that DOMParser might miss
-    const fullyDecoded = decoded.replace(/&amp;#39;/g, "'")
+        const fullyDecoded = decoded.replace(/&amp;#39;/g, "'")
                                 .replace(/&#39;/g, "'")
                                 .replace(/&quot;/g, '"')
                                 .replace(/&lt;/g, '<')
@@ -57,24 +63,15 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             <br />
           </React.Fragment>
         ));
-      
+      //return the now properly formatted description 
         return formatted;
       }
 
-    //select options for phone types 
-    const phoneTypes = [
-        {
-            value: ''
-        },
-        {
-            value: "Android"
-        },
-        {
-            value: "iPhone"
-        }
-    ];
-
-    //view bio modal 
+    /* View Bio Modal
+    This is the modal that gets displayed when 'View Current Bio' button is selected. 
+    This modal displays the encoded description of the specific pet as it is gathered from the api
+    This modal includes the pets name as well as the description
+    **/
     const viewBioModal = (
         <>
         <Dialog open={viewBioOpen} onClose={handleCloseBio} className={styles.modal}>
@@ -91,15 +88,19 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         </>
     );
 
-    //requested bool state 
+    //requested bool state to keep track if request submit has been selected
+    //This can be useful for a dev team to use to do specific things when the request submit is selected
     const [requested, setRequested] = useState(false);
 
     //function to handle checking input fields and requesting a bio
+    /* Request Bio Function
+    This function has no parameters passed and is triggered by the send request button in the request bio modal
+    This function expects input from the user and will retrieve the link to the bio form for this specific pet id 
+    **/
     function requestBio () {
         //get modal inputs
         let fosterNum = document.getElementById("fosterNum").value;
         let phoneNum = document.getElementById("phoneNum").value;
-        let phoneType = document.getElementById("phoneType").value;
 
         //error handling if fields are not filled out
         if (fosterNum == "" || phoneNum == "" || phoneType == "") {
@@ -109,30 +110,44 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                 errorReq.style.display="none";
             }, 3000);
         } else {
-            //send request stuff to foster with that info 
-            //url for php code
-            //setPetUrl("fetchmystory.com/foster-view.php?params=" + pet.id + "X" + phoneNum);
-            //url for react code 
+            //send request to foster with that info 
 
-            //create link for foster sms with this pets info
+            /*create link for foster sms with this pets info
+            This gathers what the current pet is and sets the global variable in react for the current pet key */
             const petKey = `pet-${pet.id}`;
             localStorage.setItem(petKey, JSON.stringify(pet));
 
+            //creates the link to the bio form for the specific pet id
             const link = `${window.location.origin}/foster-sms?petId=${pet.id}`;
-            setPetUrl(link);
+            /*This link is for testing purposes, as there is no way to test the mobile handling
+            while this version is hosted on the server. 
+            const link = `http://localhost:5175/foster-sms?petId=${pet.id}`; */
+ 
+            /* sets the pet url as the link created 
+            for testing purposes, while still hosted on the server, the link was logged in the console 
+            to redirect to 
+            */
+            setPetUrl(link); 
+            //console.log(link);
 
+            /*sets requested to true
+            Sets the sms url, which is the entirety of the sms message to toggle the text application
+            This smsUrl includes the phone number, the text message, and the url to the pet bio form 
+            Because there is no way to test the messaging code due to this being hosted on a server, for the remainder of this code
+            reference the cloud version, as it is tested and inherently working end to end on that version
+            */
             setRequested(true);
-            if (phoneType === "Android") setSmsUrl(`sms:${phoneNum || ''}?body=${localStorage.getItem('textMessage') + " " + petUrl}`);
-            if (phoneType === "iPhone") setSmsUrl(`sms:${phoneNum || ''}&body=${localStorage.getItem('textMessage') + " " + petUrl}`);
+            setSmsUrl(`sms:${phoneNum || ''}?body=${localStorage.getItem('textMessage') + " " + petUrl}`);
             
-            //demo purposes => sending us to the link the user would hypothetically get
-            setTimeout(() => {
-                window.location.href = petUrl;
-            }, 2000)
         }
     }
 
-    //request bio modal 
+    /* Request Bio Modal
+    This is the modal that gets displayed when 'Request Bio' button is selected. 
+    This modal displays inputs for the user to complete to gather the information required to send the message to the user 
+    This modal includes the pets name, as well as an error display that is hidden, and shown if the user selects submit while
+    an input field is empty 
+    **/
     const requestBioModal = (
         <>
         <Dialog open={requestBioOpen} onClose={handleCloseReq} className={styles.modal}>
@@ -142,30 +157,32 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                 <Grid2>
                     <TextField id="fosterNum" label="Enter the foster's phone number" size="small" className={styles.textInput}></TextField>
                     <TextField id="phoneNum" label="Enter your phone number" size="small" className={styles.textInput}></TextField>
-                    <TextField id="phoneType" select label="Select your phone type" size="small" className={styles.textInput}>
-                        {phoneTypes.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.value}</MenuItem>
-                        ))}
-
-                    </TextField>
                     <br></br>
+                    {/* Error that is hidden and will be shown based on the input fields  */}
                     <Typography display="none" id="errorReq" className={styles.editText}>Please fill out all fields.</Typography>
                 </Grid2>
             </DialogContent>
             <DialogActions>
                 <Button variant="outlined" onClick={handleCloseReq}>Close</Button>
+                {/* Requested bool also allows for there to be a spinning wheel if the send request is appropriately selected  */}
                 <Button variant="outlined" onClick={requestBio} endIcon={requested ? <LoopIcon /> : null}>Send Request</Button>
             </DialogActions>
         </Dialog>
         </>
     );
 
-    //view photos modal 
+    /* View Photos Modal
+    This is the modal that gets displayed when 'View Photos' button is selected. 
+    This modal displays the pets name and the photos associated with that pet 
+    If there are multiple photos for this pet, the user is able to scroll through these images 
+    If not pets are found, the modal will display a message stating this 
+    **/
     const viewPhotosModal = (
         <>
         <Dialog open={viewPhotosOpen} onClose={handleClosePhotos} className={styles.modal}>
         <DialogTitle>Photos - {title}</DialogTitle>
             <DialogContent className={styles.modal}>
+                {/* Map function to display each photo that the pet has in the api */}
                 {pet.photos && pet.photos.length > 0 ? (
                     pet.photos.map((photo, index) => (
                     <Grid2 key={index} className={styles.imgContainer} margin={'10px 0px 10px 0px'}>
@@ -185,9 +202,18 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
         </>
     );
 
+    //bool to tell if photos were requested to allow for the loop icon
     const [reqAdd, setReqAdd] = useState(false);
 
-        //request add photos modal 
+        /* Add Photos Modal
+        This is the modal that gets displayed when 'Add Photos' is selected. 
+        This modal displays the pets name, as well as an error display that is hidden and shown if the user selects submit while an input
+        field is empty. 
+        When the fields are filled out and send request is selected, it calls request bio and has the same workflow as the bio request.
+        This is a placeholder for the shelter's dev team to choose what specifically works for their case as far as photos, as we were 
+        informed not to dive too deep into the photo portion. Due to this, the form has a question about when they'd like their photos 
+        to be scheduled, which will be filled out in the bio generated form 
+        */
         const addPhotoModal = (
             <>
             <Dialog open={addPhotoOpen} onClose={handleCloseAddPhoto} className={styles.modal}>
@@ -197,46 +223,24 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                     <Grid2>
                         <TextField id="fosterNumPhotos" label="Enter the foster's phone number" size="small" className={styles.textInput}></TextField>
                         <TextField id="phoneNumPhotos" label="Enter your phone number" size="small" className={styles.textInput}></TextField>
-                        <TextField id="phoneTypePhotos" select label="Select your phone type" size="small" className={styles.textInput}>
-                            {phoneTypes.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>{option.value}</MenuItem>
-                            ))}
-    
-                        </TextField>
                         <br></br>
+                        {/* Error handling if the inputs are empty   */}
                         <Typography display="none" id="errorAdd" className={styles.editText}>Please fill out all fields.</Typography>
                     </Grid2>
                 </DialogContent>
                 <DialogActions>
                     <Button variant="outlined" onClick={handleCloseAddPhoto}>Close</Button>
-                    <Button variant="outlined" onClick={requestPhotos} endIcon={reqAdd ? <LoopIcon /> : null}>Send Request</Button>
+                    {/* currently references request bio and sends to the user  */}
+                    <Button variant="outlined" onClick={requestBio} endIcon={reqAdd ? <LoopIcon /> : null}>Send Request</Button>
                 </DialogActions>
             </Dialog>
             </>
         );
 
-        //function to handle checking input fields and requesting photos
-        function requestPhotos () {
-            //get modal inputs
-            let fosterNum = document.getElementById("fosterNumPhotos").value;
-            let phoneNum = document.getElementById("phoneNumPhotos").value;
-            let phoneType = document.getElementById("phoneTypePhotos").value;
-    
-            //error handling if fields are not filled out
-            if (fosterNum == "" || phoneNum == "" || phoneType == "") {
-                let errorAdd = document.getElementById("errorAdd");
-                errorAdd.style.display="block";
-                setTimeout(() => {
-                    errorAdd.style.display="none";
-                }, 3000);
-            } else {
-                //send request stuff to foster with that info 
-                setReqAdd(true);
-                setTimeout(() => {handleCloseAddPhoto()}, 3000)
-            }
-        }
-
-
+    /* Edit Modal Component HTML View 
+    The above code is all functions and modals corresponding to the edit modal 
+    The below code is all of the views possible for the edit modal 
+    */
     return (
         <>
         {/* include modals for page */}
@@ -248,6 +252,7 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
             <DialogTitle>{title}</DialogTitle>
             <DialogContent className={styles.modalContent}>
             <Grid2 className={styles.imgContainer}>
+                {/* display the pets photos if they are present, if not display no photos  */}
                 {pet.photos[0]?.large ? (
                     <img src={pet.photos[0]?.large || 'placeholder.jpg'} alt={pet.name} width='100%'/>
                 ) : (
@@ -255,7 +260,9 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                 )}
                 
             </Grid2>
-            {/* need description view for modal - else is the view for not needing desc */}
+            {/* If the pet has the need description flag, this is the display that will show
+                the else condition is the display if the pet already has a description and is not flagged
+            */}
             {needDesc ? (
                 <Grid2 id="needsDescDiv">
                     <br></br>
@@ -272,7 +279,9 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                     <Fab variant="extended" size="small" onClick={handleOpenBio} className={styles.bioButtonsSingle}>View Current Bio</Fab>
                 </Grid2>
             )}
-            {/* view for if pet doesnt needs photos - else view for not needing photos */}
+            {/* If the pet has the needs photos flag, this is the display that will show
+                the else condition is the display if the pet currently has photos and is not flagged 
+            */}
             {needPhotos ? (
                 <Grid2 id="needsPhotosDiv">
                 <br></br>
@@ -290,11 +299,11 @@ function EditModal({ open, handleClose, title, pet, needDesc, needPhotos }) {
                 </Grid2>
             )}
             <br></br>
+            {/* if both buttons are present, here is additional styling applied  */}
             {needDesc || needPhotos ? (
                 <Grid2 className={styles.editModalButtons} gap={3}>
                 <br></br>
-                {/* <Fab variant="extended" size="medium" onClick={handleClose} className={styles.publishButton}>Publish</Fab> */}
-                <Fab variant="extended" size="medium" onClick={handleOpenReq} className={styles.rejectButton}>Reject</Fab>
+                {/* Area to put buttons for potential rejection and publishing  */}
             </Grid2>
             ) : (<br></br>)}
             </DialogContent>
