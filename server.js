@@ -4,8 +4,6 @@ import axios from 'axios';
 
 const app = express();
 const PORT = 3000;
-const CLIENT_ID = 'J06btbshqZYna6oXE2Kn8LbU8xPRemIZ4mSYCOThUuoT8tVq0Z';
-const CLIENT_SECRET = 'qyuM8A8wbCCR90igrH2UA2NH0fohnfAMh96IEg0g';
 
 app.use(cors());
 app.use(express.json());
