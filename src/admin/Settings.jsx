@@ -168,6 +168,9 @@ function Settings() {
   const cancelNewAIPrompt = () => {
     setAIPrompt('');
   };
+  const cancelQuestionChange = () => {
+    setSelectedQuestion('');
+  };
   
   //constructor for question list with edit and delete buttons
   const petQuestionsPage = () => (
