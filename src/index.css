@@ -1,4 +1,6 @@
+/* general styling for the entirety of the app */
 /* applies to everything */
+/* sets the fonts used  */
 * {
   font-family: Helvetica, Arial, sans-serif;
 }

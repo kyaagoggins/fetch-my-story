@@ -1,3 +1,6 @@
+/* This page is the css page for the pet card component */
+
+/* general pet card styling  */
 .petCard {
     display: flex;
     flex-direction: column;
@@ -12,6 +15,7 @@
     cursor:pointer;
 }
 
+/* styling for the image container within the pet card */
 .imgContainer {
     height: 300px;
     overflow: hidden;
@@ -21,6 +25,7 @@
     max-height: 300px;
 }
 
+/* styling for the notification badge when applicable  */
 .badge {
     position: absolute;
     top: 0;
@@ -36,6 +41,7 @@
     transform: translate(50%, -50%);
 }
 
+/* mobile responsive styling adjustments  */
 @media screen and (max-width: 830px) {
     .petCard {
         max-height: 200px;

@@ -1,24 +1,30 @@
-import { Button, Grid2, Typography } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import styles from "./PetCard.module.css"
 import EditIcon from '@mui/icons-material/Edit';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import EditModal from "../../admin/EditModal";
 
-//pet card for admin view 
+/*
+Pet Card Component
+This is the view of the pet within the admin homepage display.
+Each pet shown has a petCard component corresponding that displays either a photo, or a message, with notification bubbles when applicable
+*/
 function PetCard ({ pet, needs }) {
 
-    //state variables 
+    //state variables for states being passed from the parent 
+    //needs correspond to the pet needing description, approval, or photos
+    //the development team has the option to add additional needs categories 
     const [needDescription, setNeedDescription] = useState(false);
     const [needPhotos, setNeedPhotos] = useState(false);
     const [needApproval, setNeedApproval] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
 
-    //handle open/close modal 
+    //handle open/close edit modal 
     const handleOpenEdit = () => setOpenEdit(true);
     const handleCloseEdit = () => setOpenEdit(false);
 
-    //return different needs for icon display based on passed param
+    //return different needs for icon display based on passed parameters 
     useEffect(() => {
         switch(needs) {
             case 'attention': 
@@ -35,6 +41,10 @@ function PetCard ({ pet, needs }) {
         }
     })
 
+    /* Pet Card Component HTML View 
+    The above code is all functions and modals corresponding to the pet card 
+    The below code is all of the views possible for the pet card 
+    */
     return (
     <>
         {/* pet card div - clickable to open the edit modal  */}
@@ -56,7 +66,7 @@ function PetCard ({ pet, needs }) {
             </Grid2>
             <div><p>{pet.name}</p></div>
         </Grid2>
-        {/* edit modal parameters passed to open */}
+        {/* edit modal parameters passed to open specific pet info */}
         <EditModal 
             open={openEdit}
             handleClose={handleCloseEdit}

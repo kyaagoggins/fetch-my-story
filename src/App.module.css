@@ -1,3 +1,7 @@
+/* styling page for the general application needs  */
+
+/* general edits 
+most of these changes came with the initial template that vite gives  */
 #root {
   max-width: 1280px;
   margin: 0 auto;

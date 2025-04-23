@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'; 
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, Grid2, Fab, TextField, MenuItem } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, Grid2, TextField } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './Settings.module.css';
-                           
+            
+/* This component is the Admin Settings Page
+  This page displays all of the customizable portions of the application and allows for the editing and changing of those elements
+  In this component is where the user has the ability to change the questions in the form, the text message, and the ai prompt. 
+*/
 function Settings() {
+  //retrieve pet questions for the display
   const [display, changeDisplay] = useState('petQuestions');
-  //ai prompt from global data
+
+  //ai prompt from global stored data
   const [AIPrompt, setAIPrompt] = useState(localStorage.getItem('prompt') || "generate a pet adoption description using the following info: ");
 
-  //constructor to handle text
+  //constructor to handle text message customization
   const [textMessage, setTextMessage] = useState(localStorage.getItem('textMessage') || 'Hi! When you have a minute can you use this link to give your foster pet a better description, thanks!');
 
   //these are the default questions that will show on the screen
@@ -31,45 +37,49 @@ function Settings() {
     localStorage.setItem('petQuestions', JSON.stringify(petQuestions));
   }, [petQuestions]);
 
-  //constructor for questions
+  //constructor for questions that are currently being edited 
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
-  //edit question submit function
+  /* Change Pet Question function
+    This allows for the editing of a currently selected question
+  */
   const changePetQuestion = () => {
+    //retrieves the data that the user inputted in the input values 
     const questionText = document.getElementById("questionText").value;
     const questionResult = document.getElementById("questionResult").value;
 
     if (!selectedQuestion) return;
 
-    //sets edit question
+    //sets edit question as the questioon that is selected and continues to use the state
     const editedPetQuestion = {
       ...selectedQuestion,
       text: questionText,
       result: questionResult,
-      //value: localStorage.getItem('question' + selectedQuestion.id) 
     }
 
-    //sets all petQuestions
+    //sets all petQuestions once a question has been changed
     const updatedPetQuestions = petQuestions.map(q =>
       q.id === selectedQuestion.id ? {...q, text: questionText, result: questionResult} : q
     );
+    //updates current pet questions 
     setPetQuestions(updatedPetQuestions);
     
-    //updated global storage
+    //updates global storage of pet questions
     localStorage.setItem('petQuestions', JSON.stringify(updatedPetQuestions));
     
+    //closes the modal and sets no selected question
     setEditQuestionOpen(false);
     setSelectedQuestion(null);
   };
 
-  //new question handles and bools
+  //new question handles to open and close the modal and bools
   const [newQuestionOpen, setNewQuestionOpen] = useState(false);
   const handleNewQuestionOpen = () => setNewQuestionOpen(true);
   const handleNewQuestionClose = () => {setNewQuestionOpen(false);}
 
-  //edit question handles and bools
+  //edit question handles to open and close the modal and bools
   const [editQuestionOpen, setEditQuestionOpen] = useState(false);
-      //handle open/close modal 
+      //handle open/close modal - sets selected question as the one chosen 
     const handleEditQuestionOpen = (question) => {
       setSelectedQuestion(question);
       setEditQuestionOpen(true); 
@@ -77,6 +87,11 @@ function Settings() {
       const handleEditQuestionClose = () => {setEditQuestionOpen(false); setSelectedQuestion(null);}
 
   //question modal - both edit and add new - needed so result can be defined
+  /* Question Modal
+    This is the modal that gets displayed when a question is being edited or added 
+    This modal displays inputs for the user to complete to gather information on the new values for the submitted question 
+    This modal acts as both the edit and new workflows, changing values based on if a question is being passsed at all or created
+    **/
   const QuestionModal = ({question, edit}) => (
     <>
     <Dialog open={edit ? editQuestionOpen : newQuestionOpen} onClose={edit ? handleEditQuestionClose : handleNewQuestionClose} className={styles.modal}>
@@ -97,12 +112,13 @@ function Settings() {
     </>
   );
 
-  //add new question 
+  //add new question function - allows for the creation and initialization of a new question
   const addNewQuestion = () => {
     const questionResult = document.getElementById("questionResult").value;
     const questionText = document.getElementById("questionText").value;
 
     if (questionText) {
+      //sets new question as the values gathered
       const newQuestion = { id: petQuestions.length + 1, text: questionText, result: questionResult };
       setPetQuestions([...petQuestions, newQuestion]);
 
@@ -111,45 +127,44 @@ function Settings() {
     }
   };
 
-  //constructor to delete pet questions
+  //constructor to delete pet questions 
   const deletePetQuestion = (id) => {
     const updatedPetQuestions = petQuestions.filter((q) => q.id !== id);
     setPetQuestions(updatedPetQuestions);
+    //updates the global storage as well to account for the current questions 
     localStorage.removeItem(`question${id}`);
     localStorage.removeItem(`question${id}Result`);
   };
 
-  //update this to write questions to file or database
+  /* This is the submit button if any additional changes need to be submitted
+    This is a placeholder here for if the development team needs any allowance for database values to be sent or changed
+  */
   const commitQuestions = () => {
     console.log('Your questions have been updated!');
-    //your code here
   };
 
-    //update this to write to or update twillio
+  /* This is the submit text message changes button
+  For now, the text message gets saved in the global storage of the frontend of the app
+  If the development team is using a database, this is where additional code would be placed to update database values
+  */
   const commitText = () => {
     localStorage.setItem('textMessage', textMessage);
     console.log('Your text message has been updated!');
-
-    //your code here
   };
 
-    //update this to write to file or database
+  /* This is the submit ai prompt changes button
+  For now, the ai prompt gets saved in the global storage of the frontend of the app
+  If the development team is using a database, this is where additional code would be placed to update database values
+  */
   const commitAIPrompt = () => {
     localStorage.setItem('prompt', AIPrompt);
     console.log('Your AI prompt has been updated!');
-
-    //your code here
   };
 
-  //constructor for cancel buttons for question, text message, and AI
-  const cancelQuestionChange = () => {
-    setNewPetQuestion('');
-  };
-
+  //constructor for cancel buttons for text message and AI
   const cancelTextChange = () => {
     setTextMessage('');
   };
-
   const cancelNewAIPrompt = () => {
     setAIPrompt('');
   };
@@ -228,7 +243,7 @@ function Settings() {
     </div>
   );
 
-//constructor to switch the display page for breadcrumbs
+//constructor to switch the display page for breadcrumbs and header changes
   const getCurrentPage = () => {
     switch (display) {
       case 'petQuestions':
@@ -242,8 +257,14 @@ function Settings() {
     }
   };
   
+
+  /* Admin Settings Component HTML View 
+    The above code is all functions, modals, and tab views corresponding to the admin settings 
+    The below code is all of the views for the admin settings 
+    */
 return (
   <>
+  {/* functionality for including the modals as both edit and add  */}
   {selectedQuestion && <QuestionModal question={selectedQuestion} edit={true} />}
   {newQuestionOpen && <QuestionModal question={null} edit={false} />}
    <div className={styles.container}>
@@ -273,6 +294,7 @@ return (
 
     </div>
 
+  {/* show tab displays depending on heading choice  */}
     {
     display === 'petQuestions' && petQuestionsPage()
     }
